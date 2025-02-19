@@ -2,7 +2,7 @@ services:
   frigate:
     container_name: frigate
     privileged: true
-    image: ghcr.io/blakeblackshear/frigate:0.15.0-beta2-tensorrt
+    image: ghcr.io/blakeblackshear/frigate:0.15.0-tensorrt
     restart: unless-stopped
     shm_size: "300mb"
     network_mode: host
