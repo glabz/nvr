@@ -1,0 +1,38 @@
+services:
+  frigate:
+    container_name: frigate
+    privileged: true
+    image: ghcr.io/blakeblackshear/frigate:0.15.0-beta2-tensorrt
+    restart: unless-stopped
+    shm_size: "300mb"
+    network_mode: host
+
+    environment:
+      - YOLO_MODELS=yolov7-tiny-416
+      - USE_FP16=false
+
+    volumes:
+      - ~/.frigate/config:/config
+      - /data_pool/nvr:/media/frigate
+      - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    security_opt:
+      - apparmor=unconfined
+      - systempaths=unconfined
+
+    devices:
+      - /dev/dri
+      - /dev/dma_heap
+      - /dev/rga
+      - /dev/mpp_service
